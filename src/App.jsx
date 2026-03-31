@@ -723,12 +723,6 @@ export default function App() {
                   </div>
                 )}
 
-                
-
-                
-                  </div>
-                )}
-
                 {showEscapePlan && (
                   <div className="mini-card">
                     <strong>Escape plan</strong>
@@ -755,6 +749,3 @@ export default function App() {
     </div>
   );
 }
-
-       
-      
