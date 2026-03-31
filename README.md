@@ -1,4 +1,4 @@
-# Breaking Bad Algebra
+# Breaking Bad Algebra - updated
 
 A React + Vite app for guided algebra practice.
 
