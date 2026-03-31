@@ -37,6 +37,18 @@ const levels = [
     tagline: 'Brackets and bigger traps',
     problems: ['2(x + 3) = 14', '3(x - 2) = 15', '5(x + 1) = 30', '4(x - 1) = 20'],
   },
+  {
+    id: 4,
+    title: 'Level 4: Power Moves',
+    tagline: 'Exponents & surds',
+    problems: ['x^2 = 25', '√x = 6', 'x^2 = 49', '√x = 9'],
+  },
+  {
+    id: 5,
+    title: 'Level 5: Factorise',
+    tagline: 'Break into parts',
+    problems: ['x^2 + 5x + 6 = 0', 'x^2 - 3x - 10 = 0', 'x^2 + 7x + 10 = 0', 'x^2 - x - 6 = 0'],
+  },
 ];
 
 function cleanEquation(input) {
@@ -731,4 +743,3 @@ export default function App() {
     </div>
   );
 }
-
