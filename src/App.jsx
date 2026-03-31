@@ -532,25 +532,10 @@ export default function App() {
         ) : (
           <div className="mission-grid">
             <Card>
-              <h2 className="card-title">Mission controls</h2>
-              <p className="card-copy">Guide the moves that break X out of the equation.</p>
+              <h2 className="card-title">Missions</h2>
               <div className="stack-gap">
-                <div className="mini-card">
-                  <SectionTitle icon={ShieldAlert}>Balance first</SectionTitle>
-                  <span>Every move must happen on both sides.</span>
-                </div>
-                <div className="mini-card">
-                  <SectionTitle icon={Lock}>Trap detector</SectionTitle>
-                  <span>Detected trap: <strong>{trapHint}</strong></span>
-                  <span>Unlocked moves change after every step.</span>
-                  <div className="pill-row">
-                    {availableMoves.map((move) => <span key={move} className="pill">{move}</span>)}
-                  </div>
-                </div>
-
                 {mode === 'level' && (
                   <div className="mini-card">
-                    <strong>Levels</strong>
                     <div className="stack-gap small-gap">
                       {levels.map((item, idx) => (
                         <button
