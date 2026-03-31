@@ -572,67 +572,65 @@ export default function App() {
             </Card>
           </motion.div>
         ) : (
-          <div className="mission-grid">
-            <Card>
-              <h2 className="card-title">Missions</h2>
-              <div className="stack-gap">
-                {mode === 'level' && (
-                  <div className="mini-card">
-                    <div className="stack-gap small-gap">
-                      {levels.map((item, idx) => (
-                        <button
-                          key={item.id}
-                          onClick={() => {
-                            setLevelIndex(idx);
-                            setProblemIndex(0);
-                            loadEquation(item.problems[0]);
-                          }}
-                          className={`level-btn ${idx === levelIndex ? 'level-btn-active' : ''}`}
-                        >
-                          <span>{item.title}</span>
-                          <small>{item.tagline}</small>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+         <div className="mission-grid">
+  <Card>
+    <h2 className="card-title">Missions</h2>
+    <div className="stack-gap">
+      {mode === 'level' && (
+        <div className="mini-card">
+          <div className="stack-gap small-gap">
+            {levels.map((item, idx) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setLevelIndex(idx);
+                  setProblemIndex(0);
+                  loadEquation(item.problems[0]);
+                }}
+                className={`level-btn ${idx === levelIndex ? 'level-btn-active' : ''}`}
+              >
+                <span>{item.title}</span>
+                <small>{item.tagline}</small>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-                {mode === 'homework' && (
-                  <div className="mini-card">
-                    <strong>Homework equation</strong>
-                    <input
-                      value={customEquation}
-                      onChange={(e) => setCustomEquation(e.target.value)}
-                      placeholder="Type an equation"
-                      className="text-input"
-                    />
-                    <AppButton variant="secondary" onClick={() => loadEquation(customEquation.trim())}>Load equation</AppButton>
+      {mode === 'homework' && (
+        <div className="mini-card">
+          <strong>Homework equation</strong>
+          <input
+            value={customEquation}
+            onChange={(e) => setCustomEquation(e.target.value)}
+            placeholder="Type an equation"
+            className="text-input"
+          />
+          <AppButton variant="secondary" onClick={() => loadEquation(customEquation.trim())}>
+            Load equation
+          </AppButton>
 
-                    <div className="mini-card" style={{ marginTop: '10px' }}>
-                      <strong>🧠 How to free x</strong>
-                      <div>• Undo what was done to x</div>
-                      <div>• Start with the outside</div>
-                      <div>• Keep both sides balanced</div>
-                      <div>• Repeat until x is alone</div>
-                    </div>
-                  </div>
-                )}
-                      placeholder="Type an equation"
-                      className="text-input"
-                    />
-                    <AppButton variant="secondary" onClick={() => loadEquation(customEquation.trim())}>Load equation</AppButton>
-                  </div>
-                )}
+          <div className="mini-card" style={{ marginTop: '10px' }}>
+            <strong>🧠 How to free x</strong>
+            <div>• Undo what was done to x</div>
+            <div>• Start with the outside</div>
+            <div>• Keep both sides balanced</div>
+            <div>• Repeat until x is alone</div>
+          </div>
+        </div>
+      )}
 
-                <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>
-                  {showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}
-                </AppButton>
+      <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>
+        {showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}
+      </AppButton>
 
-                <AppButton variant="secondary" onClick={handleResetAll}><RefreshCw size={16} /> Reset app</AppButton>
-              </div>
-            </Card>
+      <AppButton variant="secondary" onClick={handleResetAll}>
+        <RefreshCw size={16} /> Reset app
+      </AppButton>
+    </div>
+  </Card>
 
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
+  <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
               <Card>
                 <div className="badge-row mission-top-badges">
                   <Badge>{mode === 'level' ? level.title : 'Homework mode'}</Badge>
