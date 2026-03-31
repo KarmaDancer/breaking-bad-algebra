@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Home, Lock, RefreshCw, ShieldAlert, Swords, Target, WandSparkles } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 const trapOptions = ['Added', 'Subtracted', 'Multiplied', 'Divided', 'Inside brackets', 'Squared'];
 const allMoveOptions = [
@@ -509,6 +510,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <Analytics />
       <div className="app-wrap">
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="hero-card">
