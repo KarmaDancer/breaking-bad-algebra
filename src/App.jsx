@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Home, Lock, RefreshCw, ShieldAlert, Swords, Target, WandSparkles } from 'lucide-react';
 
-const trapOptions = ['Added', 'Subtracted', 'Multiplied', 'Divided', 'Inside brackets'];
+const trapOptions = ['Added', 'Subtracted', 'Multiplied', 'Divided', 'Inside brackets', 'Squared'];
 const allMoveOptions = [
-  'Square root both sides',
   'Add the same number to both sides',
   'Subtract the same number from both sides',
   'Multiply both sides',
@@ -16,6 +15,7 @@ const allMoveOptions = [
   'Clear the fraction',
   'Apply exponent laws',
   'Simplify surds',
+  'Square root both sides',
   'Graph it',
 ];
 
@@ -39,11 +39,11 @@ const levels = [
     problems: ['2(x + 3) = 14', '3(x - 2) = 15', '5(x + 1) = 30', '4(x - 1) = 20'],
   },
   {
-    id: 4,
-    title: 'Level 4: Power Moves',
-    tagline: 'Exponents & surds',
-    problems: ['x^2 = 25', '√x = 6', 'x^2 = 49', '√x = 9'],
-  },
+  id: 4,
+  title: 'Level 4: Power Moves',
+  tagline: 'Exponents',
+  problems: ['x^2 = 25', 'x^2 = 49', 'x^2 = 64', 'x^2 = 81'],
+},
   {
     id: 5,
     title: 'Level 5: Factorise',
@@ -74,19 +74,14 @@ function formatBracketExpression(outer, inner) {
 }
 
 function parseEquation(equation) {
-  const eq = cleanEquation(equation);
-// Power (x^2 = number)
-let match = eq.match(/^x\^2=(-?\d+)$/);
-if (match) {
-  return { type: 'power', rhs: Number(match[1]) };
-}
+  const eq = cleanEquation(equation).replace(/²/g, '^2');
 
-// Surd (√x = number)
-match = eq.match(/^√x=(-?\d+)$/);
-if (match) {
-  return { type: 'surd', rhs: Number(match[1]) };
-}
-  let match = eq.match(/^([+-]?\d*)x([+-]\d+)?=(-?\d+)$/);
+  let match = eq.match(/^x\^2=(-?\d+)$/);
+  if (match) {
+    return { type: 'power', rhs: Number(match[1]) };
+  }
+
+  match = eq.match(/^([+-]?\d*)x([+-]\d+)?=(-?\d+)$/);
   if (match) {
     const rawCoeff = match[1];
     const coeff = rawCoeff === '' || rawCoeff === '+' ? 1 : rawCoeff === '-' ? -1 : Number(rawCoeff);
@@ -109,13 +104,9 @@ if (match) {
 
 function equationToString(parsed) {
   if (!parsed) return '';
-  
-if (parsed.type === 'power') return 'Squared';
-    return `x² = ${parsed.rhs}`;
-  }
 
-  if (parsed.type === 'surd') return 'Inside square root';
-    return `√x = ${parsed.rhs}`;
+  if (parsed.type === 'power') {
+    return `x² = ${parsed.rhs}`;
   }
 
   if (parsed.type === 'linear') {
@@ -131,6 +122,7 @@ if (parsed.type === 'power') return 'Squared';
 
 function detectTrap(parsed) {
   if (!parsed) return 'Unknown';
+  if (parsed.type === 'power') return 'Squared';
   if (parsed.type === 'brackets') return 'Inside brackets';
   if (parsed.constant > 0) return 'Added';
   if (parsed.constant < 0) return 'Subtracted';
@@ -140,6 +132,10 @@ function detectTrap(parsed) {
 
 function getAvailableMoves(parsed) {
   if (!parsed) return [];
+
+  if (parsed.type === 'power') {
+    return ['Square root both sides'];
+  }
 
   if (parsed.type === 'brackets') {
     const moves = [];
@@ -164,6 +160,27 @@ function getAvailableMoves(parsed) {
 
 function buildPreviewStep(parsed, move) {
   if (!parsed || !move) return null;
+
+  if (parsed.type === 'power') {
+    const before = equationToString(parsed);
+
+    if (move === 'Square root both sides') {
+      const value = Math.sqrt(parsed.rhs);
+      const afterParsed = {
+        type: 'linear',
+        coeff: 1,
+        constant: 0,
+        rhs: value,
+      };
+
+      return {
+        before,
+        action: 'square root both sides',
+        after: equationToString(afterParsed),
+        nextParsed: afterParsed,
+      };
+    }
+  }
 
   if (parsed.type === 'linear') {
     const before = equationToString(parsed);
