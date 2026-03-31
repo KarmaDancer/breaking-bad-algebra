@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Home, Lock, RefreshCw, ShieldAlert, Swords, Target, WandSparkles } from 'lucide-react';
 
@@ -301,6 +301,7 @@ export default function App() {
   const [roundNumber, setRoundNumber] = useState(1);
   const [roundPrompt, setRoundPrompt] = useState('');
   const [walterMessage, setWalterMessage] = useState("Let’s cook… algebra.");
+  const engineTopRef = useRef(null);
 
   const level = levels[levelIndex];
   const presetEquation = useMemo(() => getProblem(levelIndex, problemIndex), [levelIndex, problemIndex]);
@@ -317,6 +318,12 @@ export default function App() {
   const progress = Math.round((solvedCount / totalProblems) * 100);
   const isCorrect = activeEquation && solution !== null && guess !== '' && Number(guess) === solution;
   const missionComplete = parsed?.type === 'linear' && parsed.coeff === 1 && parsed.constant === 0;
+
+  useEffect(() => {
+    if (roundNumber > 1 && engineTopRef.current) {
+      engineTopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [roundNumber]);
 
   function resetMissionState(nextEquation = baseEquation) {
     setLiveEquation(nextEquation || '');
@@ -596,12 +603,7 @@ export default function App() {
                 <h2 className="card-title">Current mission</h2>
                 <p className="card-copy">Break X out of the equation using guided moves.</p>
 
-                <div className="equation-box">
-                  <div className="equation-label">Equation file</div>
-                  <div className="equation-text">{activeEquation || 'Type an equation to start'}</div>
-                </div>
-
-                <div className="engine-box">
+                                <div className="engine-box" ref={engineTopRef}>
                   <div className="equation-box" style={{ marginBottom: '12px' }}>
                     <div className="equation-label">Current equation</div>
                     <div className="equation-text">{activeEquation || 'Type an equation to start'}</div>
@@ -609,8 +611,7 @@ export default function App() {
                   {roundPrompt && <div className="muted">{roundPrompt}</div>}
                   <div>
                     <div className="step-label">Round {roundNumber} · Step 1 — First Principle</div>
-                    <div className="step-title">The equation must stay balanced.</div>
-                    <div className="card-copy">How is X trapped?</div>
+                    <div className="step-title">Step 1. The equation must stay balanced. How is X trapped?</div>
                   </div>
                   <div className="option-grid">
                     {trapOptions.map((option) => (
@@ -627,8 +628,8 @@ export default function App() {
                   {selectedTrap && <p className="card-copy">You chose: <strong>{selectedTrap}</strong></p>}
 
                   <div>
-                    <div className="step-label">Step 2 — Inquiry</div>
-                    <div className="card-copy">What move makes sense here now?</div>
+                    <div className="step-label">Step 2</div>
+                    <div className="card-copy">What move is the opposite of how X is trapped?</div>
                     {selectedMove === '' && availableMoves.length > 0 && (
                       <div className="muted">Hint: a good next move is <strong>{suggestedMove}</strong>.</div>
                     )}
@@ -662,11 +663,11 @@ export default function App() {
 
                 <div className="mini-card observation-box">
                   <div className="step-label">Step 3 — Observation</div>
-                  <div className="step-title">What changes after the move?</div>
+                  <div className="step-title">Step 3. Apply your chosen move and type your new equation</div>
                   <div className="observation-panel">
                     <div className="obs-line">{activeEquation || 'Equation'}</div>
                     <div className="obs-arrow">↓ {selectedMove ? (previewStep?.action || 'Work out the next balanced equation') : 'Choose the move for this round first'}</div>
-                    <div className="obs-line">{stepCorrect ? (previewStep?.after || 'Next balanced equation appears here') : 'Type the next balanced equation below'}</div>
+                    <div className="obs-line">{stepCorrect ? (previewStep?.after || '') : ''}</div>
                   </div>
                   <div className="stack-gap small-gap">
                     <strong>Type the new equation</strong>
@@ -682,7 +683,7 @@ export default function App() {
                     />
                   </div>
                   <div className="yesno-row">
-                    <AppButton variant="secondary" onClick={checkStepAndAdvance} disabled={!selectedMove || !previewStep}>Check step</AppButton>
+                    <AppButton variant="secondary" onClick={checkStepAndAdvance} disabled={!selectedMove || !previewStep}>Check move</AppButton>
                     <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>{showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}</AppButton>
                   </div>
                   {stepChecked && (
@@ -779,7 +780,3 @@ export default function App() {
     </div>
   );
 }
-
-               
-             
-            
