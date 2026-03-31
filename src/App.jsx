@@ -289,8 +289,6 @@ export default function App() {
   const [guess, setGuess] = useState('');
   const [selectedTrap, setSelectedTrap] = useState('');
   const [selectedMove, setSelectedMove] = useState('');
-  const [appliesToBothSides, setAppliesToBothSides] = useState(null);
-  const [balancedAnswer, setBalancedAnswer] = useState(null);
   const [showEscapePlan, setShowEscapePlan] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [solvedCount, setSolvedCount] = useState(0);
@@ -301,7 +299,6 @@ export default function App() {
   const [stepChecked, setStepChecked] = useState(false);
   const [stepCorrect, setStepCorrect] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
-  const [roundPrompt, setRoundPrompt] = useState('');
   const [roundPrompt, setRoundPrompt] = useState('');
   const [walterMessage, setWalterMessage] = useState("Let’s cook… algebra.");
 
@@ -325,8 +322,6 @@ export default function App() {
     setLiveEquation(nextEquation || '');
     setSelectedTrap('');
     setSelectedMove('');
-    setAppliesToBothSides(null);
-    setBalancedAnswer(null);
     setShowEscapePlan(false);
     setSubmitted(false);
     setGuess('');
@@ -335,7 +330,6 @@ export default function App() {
     setStepChecked(false);
     setStepCorrect(false);
     setRoundNumber(1);
-    setRoundPrompt('');
     setRoundPrompt('');
   }
 
@@ -366,38 +360,44 @@ export default function App() {
     }
   }
 
-  function checkStep() {
+  function checkStepAndAdvance() {
     if (!previewStep) return;
+
     const typed = cleanEquation(nextEquationInput);
     const expected = cleanEquation(previewStep.after);
     const correct = typed !== '' && typed === expected;
+
     setStepChecked(true);
     setStepCorrect(correct);
 
-    if (correct) {
-      setWalterMessage('Nice. That keeps the balance.');
-    } else {
+    if (!correct) {
       setWalterMessage('Nope. That doesn’t balance the books.');
+      return;
     }
-  }
 
-  function applyMove() {
-    if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect) return;
+    const nextParsed = parseEquation(previewStep.after);
+
     setHistory((prev) => [...prev, previewStep]);
     setLiveEquation(previewStep.after);
     setSelectedTrap('');
     setSelectedMove('');
-    setAppliesToBothSides(null);
-    setBalancedAnswer(null);
-    setSubmitted(false);
     setNextEquationInput('');
     setStepChecked(false);
     setStepCorrect(false);
+
+    if (nextParsed?.type === 'linear' && nextParsed.coeff === 1 && nextParsed.constant === 0) {
+      setWalterMessage('Good. X has broken free.');
+      setRoundPrompt('');
+      setRoundNumber((n) => n + 1);
+      return;
+    }
+
     setRoundNumber((n) => n + 1);
     setRoundPrompt('New equation. Start again: how is X trapped now, and what move makes sense here now?');
-
     setWalterMessage('X is still trapped. What’s the next move?');
   }
+
+  
 
   function handleNextMission() {
     if (mode === 'homework') {
@@ -441,8 +441,6 @@ export default function App() {
     setGuess('');
     setSelectedTrap('');
     setSelectedMove('');
-    setAppliesToBothSides(null);
-    setBalancedAnswer(null);
     setShowEscapePlan(false);
     setSubmitted(false);
   }
@@ -605,7 +603,6 @@ export default function App() {
 
                 <div className="engine-box">
                   {roundPrompt && <div className="muted">{roundPrompt}</div>}
-                  {roundPrompt && <div className="muted">{roundPrompt}</div>}
                   <div>
                     <div className="step-label">Round {roundNumber} · Step 1 — First Principle</div>
                     <div className="step-title">The equation must stay balanced.</div>
@@ -657,15 +654,7 @@ export default function App() {
                   {selectedMove && <p className="card-copy">You chose: <strong>{selectedMove}</strong></p>}
                   {availableMoves.length > 0 && <p className="muted">Only the moves that fit this exact stage of the equation are unlocked.</p>}
 
-                  <div className="mini-card">
-                    <strong>Apply to both sides?</strong>
-                    <div className="yesno-row">
-                      <AppButton variant="secondary" onClick={() => setAppliesToBothSides(true)} className={appliesToBothSides === true ? 'selected' : ''}>✅ Yes</AppButton>
-                      <AppButton variant="secondary" onClick={() => setAppliesToBothSides(false)} className={appliesToBothSides === false ? 'selected' : ''}>❌ No</AppButton>
-                    </div>
-                    {appliesToBothSides === false && <span className="warning">Teachable moment: the move must happen on both sides to keep the equation balanced.</span>}
                   </div>
-                </div>
 
                 <div className="mini-card observation-box">
                   <div className="step-label">Step 3 — Observation</div>
@@ -688,16 +677,8 @@ export default function App() {
                       className="text-input"
                     />
                   </div>
-                  <div>
-                    <strong>Is the equation still balanced?</strong>
-                    <div className="yesno-row">
-                      <AppButton variant="secondary" onClick={() => setBalancedAnswer(true)} className={balancedAnswer === true ? 'selected' : ''}>✅ Yes</AppButton>
-                      <AppButton variant="secondary" onClick={() => setBalancedAnswer(false)} className={balancedAnswer === false ? 'selected' : ''}>❌ No</AppButton>
-                    </div>
-                  </div>
                   <div className="yesno-row">
-                    <AppButton variant="secondary" onClick={checkStep} disabled={!selectedMove || !previewStep || appliesToBothSides !== true}>Check step</AppButton>
-                    <AppButton onClick={applyMove} disabled={!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect}>Apply move</AppButton>
+                    <AppButton variant="secondary" onClick={checkStepAndAdvance} disabled={!selectedMove || !previewStep}>Check step</AppButton>
                     <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>{showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}</AppButton>
                   </div>
                   {stepChecked && (
@@ -715,7 +696,7 @@ export default function App() {
                       )}
                     </div>
                   )}
-                  {appliesToBothSides === false && <span className="warning">You need to apply the move to both sides first.</span>}
+                  
                 </div>
 
                 {missionComplete && (
@@ -792,3 +773,4 @@ export default function App() {
     </div>
   );
 }
+
