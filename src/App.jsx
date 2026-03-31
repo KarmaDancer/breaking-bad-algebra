@@ -514,29 +514,7 @@ export default function App() {
               <h2 className="card-title">Free X Engine</h2>
               <p className="card-copy">Learn the moves that break X out of the equation.</p>
               <div className="stack-gap">
-                <div className="mini-card"><strong>1. Balance first</strong><span>Whatever you do to one side, you must do to the other.</span></div>
-                <div className="mini-card"><strong>2. Find the trap</strong><span>Work out how X is trapped.</span></div>
-                <div className="mini-card"><strong>3. Choose the move</strong><span>Only relevant moves unlock.</span></div>
-                <div className="mini-card"><strong>4. Observe and repeat</strong><span>Each move updates the equation and unlocks the next set of moves.</span></div>
-              </div>
-            </Card>
-
-            <Card>
-              <SectionTitle icon={WandSparkles}>Choose your mode</SectionTitle>
-              <h2 className="card-title">Start a mission</h2>
-              <p className="card-copy">Practice with built-in levels or bring in a homework equation.</p>
-              <div className="stack-gap">
-                <AppButton onClick={startLevelMode}><Swords size={16} /> Practice missions</AppButton>
-                <div className="mini-card">
-                  <strong>Homework mode</strong>
-                  <input
-                    value={customEquation}
-                    onChange={(e) => setCustomEquation(e.target.value)}
-                    placeholder="Type an equation, e.g. 3x + 5 = 20"
-                    className="text-input"
-                  />
-                </div>
-                <AppButton variant="secondary" onClick={startHomeworkMode}><Home size={16} /> Use my own homework equation</AppButton>
+                <AppButton onClick={startHomeworkMode}><Home size={16} /> Use my own homework equation</AppButton>
               </div>
             </Card>
           </motion.div>
