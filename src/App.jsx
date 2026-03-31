@@ -420,7 +420,7 @@ return (
         alt="Walter White asking about homework"
         className="w-32 rounded-2xl border border-white/10 shadow-2xl opacity-90"
       />
-    </div>
+    
 
     <div className="app-wrap">
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
