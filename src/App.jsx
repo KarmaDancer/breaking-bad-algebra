@@ -568,6 +568,10 @@ export default function App() {
                   </div>
                 )}
 
+                <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>
+                  {showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}
+                </AppButton>
+
                 <AppButton variant="secondary" onClick={handleResetAll}><RefreshCw size={16} /> Reset app</AppButton>
               </div>
             </Card>
@@ -668,7 +672,7 @@ export default function App() {
                   </div>
                   <div className="yesno-row">
                     <AppButton variant="secondary" onClick={checkStepAndAdvance} disabled={!selectedMove || !previewStep}>Check move</AppButton>
-                    <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>{showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}</AppButton>
+                    
                   </div>
                   {stepChecked && (
                     <div className={`feedback-box ${stepCorrect ? 'feedback-success' : 'feedback-error'}`}>
@@ -727,3 +731,4 @@ export default function App() {
     </div>
   );
 }
+
