@@ -318,16 +318,12 @@ export default function App() {
   const progress = Math.round((solvedCount / totalProblems) * 100);
   const isCorrect = activeEquation && solution !== null && guess !== '' && Number(guess) === solution;
   const missionComplete = parsed?.type === 'linear' && parsed.coeff === 1 && parsed.constant === 0;
-useEffect(() => {
-  if (missionComplete) {
-    setWalterMessage('Good. X has broken free.');
-  }
-}, [missionComplete]);
+
   useEffect(() => {
-    if (roundNumber > 1 && engineTopRef.current) {
+    if ((roundNumber > 1 || missionComplete) && engineTopRef.current) {
       engineTopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [roundNumber]);
+  }, [roundNumber, missionComplete]);
 
   function resetMissionState(nextEquation = baseEquation) {
     setLiveEquation(nextEquation || '');
@@ -608,6 +604,12 @@ useEffect(() => {
                 <p className="card-copy">Break X out of the equation using guided moves.</p>
 
                                 <div className="engine-box" ref={engineTopRef}>
+                  {missionComplete && (
+                    <div className="success-box" style={{ marginBottom: '12px' }}>
+                      <strong>Mission complete.</strong>
+                      <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
+                    </div>
+                  )}
                   <div className="equation-box" style={{ marginBottom: '12px' }}>
                     <div className="equation-label">Current equation</div>
                     <div className="equation-text">{activeEquation || 'Type an equation to start'}</div>
@@ -708,12 +710,7 @@ useEffect(() => {
                   
                 </div>
 
-                {missionComplete && (
-                  <div className="success-box">
-                    <strong>Mission complete.</strong>
-                    <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
-                  </div>
-                )}
+                
 
                 {history.length > 0 && (
                   <div className="mini-card">
