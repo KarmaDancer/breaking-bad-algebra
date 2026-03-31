@@ -300,6 +300,7 @@ export default function App() {
   const [nextEquationInput, setNextEquationInput] = useState('');
   const [stepChecked, setStepChecked] = useState(false);
   const [stepCorrect, setStepCorrect] = useState(false);
+  const [roundNumber, setRoundNumber] = useState(1);
 
   const level = levels[levelIndex];
   const presetEquation = useMemo(() => getProblem(levelIndex, problemIndex), [levelIndex, problemIndex]);
@@ -309,7 +310,7 @@ export default function App() {
   const trapHint = detectTrap(parsed);
   const availableMoves = getAvailableMoves(parsed);
   const suggestedMove = availableMoves[0] || 'Simplify';
-  const previewStep = buildPreviewStep(parsed, selectedMove || suggestedMove);
+  const previewStep = buildPreviewStep(parsed, selectedMove);
   const solved = solveEquation(activeEquation);
   const solution = solved?.solution;
   const totalProblems = levels.reduce((sum, lvl) => sum + lvl.problems.length, 0);
@@ -330,6 +331,7 @@ export default function App() {
     setNextEquationInput('');
     setStepChecked(false);
     setStepCorrect(false);
+    setRoundNumber(1);
   }
 
   function loadEquation(nextEquation) {
@@ -578,7 +580,7 @@ export default function App() {
 
                 <div className="engine-box">
                   <div>
-                    <div className="step-label">Step 1 — First Principle</div>
+                    <div className="step-label">Round {roundNumber} · Step 1 — First Principle</div>
                     <div className="step-title">The equation must stay balanced.</div>
                     <div className="card-copy">How is X trapped?</div>
                   </div>
@@ -598,7 +600,10 @@ export default function App() {
 
                   <div>
                     <div className="step-label">Step 2 — Inquiry</div>
-                    <div className="card-copy">What move makes sense here?</div>
+                    <div className="card-copy">What move makes sense here now?</div>
+                    {selectedMove === '' && availableMoves.length > 0 && (
+                      <div className="muted">Hint: a good next move is <strong>{suggestedMove}</strong>.</div>
+                    )}
                   </div>
                   <div className="option-grid">
                     {allMoveOptions.map((option) => {
@@ -608,7 +613,13 @@ export default function App() {
                           key={option}
                           variant="secondary"
                           disabled={!unlocked}
-                          onClick={() => unlocked && setSelectedMove(option)}
+                          onClick={() => {
+                            if (!unlocked) return;
+                            setSelectedMove(option);
+                            setNextEquationInput('');
+                            setStepChecked(false);
+                            setStepCorrect(false);
+                          }}
                           className={`${selectedMove === option ? 'selected' : ''} ${!unlocked ? 'locked' : ''}`.trim()}
                         >
                           {option} {unlocked ? '✅' : '🔒'}
@@ -634,7 +645,7 @@ export default function App() {
                   <div className="step-title">What changes after the move?</div>
                   <div className="observation-panel">
                     <div className="obs-line">{activeEquation || 'Equation'}</div>
-                    <div className="obs-arrow">↓ {previewStep?.action || 'Choose an unlocked move to work out the next step'}</div>
+                    <div className="obs-arrow">↓ {selectedMove ? (previewStep?.action || 'Work out the next balanced equation') : 'Choose the move for this round first'}</div>
                     <div className="obs-line">{stepCorrect ? (previewStep?.after || 'Next balanced equation appears here') : 'Type the next balanced equation below'}</div>
                   </div>
                   <div className="stack-gap small-gap">
@@ -658,7 +669,7 @@ export default function App() {
                     </div>
                   </div>
                   <div className="yesno-row">
-                    <AppButton variant="secondary" onClick={checkStep} disabled={!previewStep || appliesToBothSides !== true}>Check step</AppButton>
+                    <AppButton variant="secondary" onClick={checkStep} disabled={!selectedMove || !previewStep || appliesToBothSides !== true}>Check step</AppButton>
                     <AppButton onClick={applyMove} disabled={!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect}>Apply move</AppButton>
                     <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>{showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}</AppButton>
                   </div>
@@ -753,6 +764,7 @@ export default function App() {
     </div>
   );
 }
+
 
                
 
