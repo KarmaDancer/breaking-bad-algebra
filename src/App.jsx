@@ -414,6 +414,13 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <div className="flex justify-center mb-6">
+  <img
+    src="/walter-white-homework.jpg"
+    alt="Walter White asking about homework"
+    className="w-full max-w-sm rounded-2xl border border-white/10 shadow-2xl"
+  />
+</div>
       <div className="app-wrap">
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="hero-card">
