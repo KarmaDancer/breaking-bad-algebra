@@ -385,11 +385,12 @@ export default function App() {
     setStepChecked(false);
     setStepCorrect(false);
 
-   if (nextParsed?.type === 'linear' && nextParsed.coeff === 1 && nextParsed.constant === 0) {
-  setWalterMessage('Good. X has broken free.');
-  setRoundPrompt('');
-  return;
-}
+    if (nextParsed?.type === 'linear' && nextParsed.coeff === 1 && nextParsed.constant === 0) {
+      setWalterMessage('Good. X has broken free.');
+      setRoundPrompt('');
+      setRoundNumber((n) => n + 1);
+      return;
+    }
 
     setRoundNumber((n) => n + 1);
     setRoundPrompt('New equation. Start again: how is X trapped now, and what move makes sense here now?');
@@ -601,6 +602,10 @@ export default function App() {
                 </div>
 
                 <div className="engine-box">
+                  <div className="equation-box" style={{ marginBottom: '12px' }}>
+                    <div className="equation-label">Current equation</div>
+                    <div className="equation-text">{activeEquation || 'Type an equation to start'}</div>
+                  </div>
                   {roundPrompt && <div className="muted">{roundPrompt}</div>}
                   <div>
                     <div className="step-label">Round {roundNumber} · Step 1 — First Principle</div>
@@ -698,12 +703,13 @@ export default function App() {
                   
                 </div>
 
-               {missionComplete && (
-  <div className="success-box">
-    <strong>Mission complete.</strong>
-    <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
-  </div>
-)}
+                {missionComplete && (
+                  (() => { setWalterMessage('Good. X has broken free.'); return null; })(),
+                  <div className="success-box">
+                    <strong>Mission complete.</strong>
+                    <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
+                  </div>
+                )}
 
                 {history.length > 0 && (
                   <div className="mini-card">
@@ -716,17 +722,19 @@ export default function App() {
                   </div>
                 )}
 
-                <div className="answer-row">
-                  <input
-                    value={guess}
-                    onChange={(e) => setGuess(e.target.value)}
-                    placeholder="Enter the value of x when X is free"
-                    className="text-input"
-                  />
-                  <AppButton onClick={handleSubmit}>Check mission</AppButton>
-                </div>
+                {!missionComplete && (
+                  <div className="answer-row">
+                    <input
+                      value={guess}
+                      onChange={(e) => setGuess(e.target.value)}
+                      placeholder="Enter the value of x when X is free"
+                      className="text-input"
+                    />
+                    <AppButton onClick={handleSubmit}>Check mission</AppButton>
+                  </div>
+                )}
 
-                {submitted && (
+                {!missionComplete && submitted && (
                   <div className={`feedback-box ${isCorrect ? 'feedback-success' : 'feedback-error'}`}>
                     {isCorrect ? (
                       <div className="feedback-row">
@@ -772,3 +780,6 @@ export default function App() {
   );
 }
 
+               
+             
+            
