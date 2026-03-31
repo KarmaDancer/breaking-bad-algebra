@@ -643,10 +643,23 @@ export default function App() {
 
                                 <div className="engine-box" ref={engineTopRef}>
                   {missionComplete && (
-                    <div className="success-box" style={{ marginBottom: '12px' }}>
-                      <strong>Mission complete.</strong>
-                      <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
-                    </div>
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="success-box"
+                      style={{
+                        marginBottom: '12px',
+                        background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                        color: 'white',
+                        border: '2px solid #15803d'
+                      }}
+                    >
+                      <strong>✅ Mission complete</strong>
+                      <div style={{ marginTop: '6px' }}>
+                        <strong>Walter says:</strong> Nice work. X is free.
+                      </div>
+                    </motion.div>
                   )}
                   <div className="equation-box" style={{ marginBottom: '12px' }}>
                     <div className="equation-label">Current equation</div>
@@ -801,4 +814,3 @@ export default function App() {
     </div>
   );
 }
-
