@@ -301,6 +301,8 @@ export default function App() {
   const [stepChecked, setStepChecked] = useState(false);
   const [stepCorrect, setStepCorrect] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
+  const [roundPrompt, setRoundPrompt] = useState('');
+  const [roundPrompt, setRoundPrompt] = useState('');
   const [walterMessage, setWalterMessage] = useState("Let’s cook… algebra.");
 
   const level = levels[levelIndex];
@@ -333,6 +335,8 @@ export default function App() {
     setStepChecked(false);
     setStepCorrect(false);
     setRoundNumber(1);
+    setRoundPrompt('');
+    setRoundPrompt('');
   }
 
   function loadEquation(nextEquation) {
@@ -390,6 +394,7 @@ export default function App() {
     setStepChecked(false);
     setStepCorrect(false);
     setRoundNumber((n) => n + 1);
+    setRoundPrompt('New equation. Start again: how is X trapped now, and what move makes sense here now?');
 
     setWalterMessage('X is still trapped. What’s the next move?');
   }
@@ -599,6 +604,8 @@ export default function App() {
                 </div>
 
                 <div className="engine-box">
+                  {roundPrompt && <div className="muted">{roundPrompt}</div>}
+                  {roundPrompt && <div className="muted">{roundPrompt}</div>}
                   <div>
                     <div className="step-label">Round {roundNumber} · Step 1 — First Principle</div>
                     <div className="step-title">The equation must stay balanced.</div>
@@ -785,10 +792,3 @@ export default function App() {
     </div>
   );
 }
-
-       
-
-               
-
-               
-
