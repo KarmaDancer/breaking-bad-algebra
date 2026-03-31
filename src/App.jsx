@@ -699,13 +699,12 @@ export default function App() {
                   
                 </div>
 
-                {missionComplete && (
-                  (() => { setWalterMessage('Good. X has broken free.'); return null; })(),
-                  <div className="success-box">
-                    <strong>Mission complete.</strong>
-                    <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
-                  </div>
-                )}
+               {missionComplete && (
+  <div className="success-box">
+    <strong>Mission complete.</strong>
+    <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
+  </div>
+)}
 
                 {history.length > 0 && (
                   <div className="mini-card">
