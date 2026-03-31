@@ -113,7 +113,7 @@ function getAvailableMoves(parsed) {
 
   if (parsed.type === 'linear') {
     const moves = [];
-    if (parsed.constant > 0) moves.push('Subtract the same number to both sides'.replace('to', 'from'));
+    if (parsed.constant > 0) moves.push('Subtract the same number from both sides');
     if (parsed.constant < 0) moves.push('Add the same number to both sides');
     if (Math.abs(parsed.coeff) !== 1) moves.push('Divide both sides');
     if (parsed.coeff === -1) moves.push('Multiply both sides');
@@ -262,14 +262,14 @@ function SectionTitle({ icon: Icon, children }) {
 
 function AppButton({ children, variant = 'primary', className = '', ...props }) {
   return (
-    <button className={`btn btn-${variant} ${className}`} {...props}>
+    <button className={`btn btn-${variant} ${className}`.trim()} {...props}>
       {children}
     </button>
   );
 }
 
 function Badge({ children, outline = false }) {
-  return <span className={`badge ${outline ? 'badge-outline' : ''}`}>{children}</span>;
+  return <span className={`badge ${outline ? 'badge-outline' : ''}`.trim()}>{children}</span>;
 }
 
 function ProgressBar({ value }) {
@@ -297,6 +297,9 @@ export default function App() {
   const [score, setScore] = useState(0);
   const [liveEquation, setLiveEquation] = useState('');
   const [history, setHistory] = useState([]);
+  const [nextEquationInput, setNextEquationInput] = useState('');
+  const [stepChecked, setStepChecked] = useState(false);
+  const [stepCorrect, setStepCorrect] = useState(false);
 
   const level = levels[levelIndex];
   const presetEquation = useMemo(() => getProblem(levelIndex, problemIndex), [levelIndex, problemIndex]);
@@ -324,6 +327,9 @@ export default function App() {
     setSubmitted(false);
     setGuess('');
     setHistory([]);
+    setNextEquationInput('');
+    setStepChecked(false);
+    setStepCorrect(false);
   }
 
   function loadEquation(nextEquation) {
@@ -353,8 +359,17 @@ export default function App() {
     }
   }
 
+  function checkStep() {
+    if (!previewStep) return;
+    const typed = cleanEquation(nextEquationInput);
+    const expected = cleanEquation(previewStep.after);
+    const correct = typed !== '' && typed === expected;
+    setStepChecked(true);
+    setStepCorrect(correct);
+  }
+
   function applyMove() {
-    if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true) return;
+    if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect) return;
     setHistory((prev) => [...prev, previewStep]);
     setLiveEquation(previewStep.after);
     setSelectedTrap('');
@@ -362,6 +377,9 @@ export default function App() {
     setAppliesToBothSides(null);
     setBalancedAnswer(null);
     setSubmitted(false);
+    setNextEquationInput('');
+    setStepChecked(false);
+    setStepCorrect(false);
   }
 
   function handleNextMission() {
@@ -423,18 +441,13 @@ export default function App() {
                 <Badge outline>Break X out of the equation</Badge>
               </div>
               <div className="hero-grid">
-                <div className="relative pr-24 md:pr-32"> 
+                <div>
                   <h1 className="hero-title">Breaking Bad Algebra</h1>
                   <p className="hero-copy">
                     X is your friend. X is trapped inside an equation. Your mission is to keep the equation balanced,
                     choose the right move, and break X out step by step.
                   </p>
                 </div>
-                <img
-  src="/walter-white-homework.jpg"
-  alt="Walter White asking about homework"
-  className="absolute top-0 right-0 w-24 md:w-32 opacity-90 pointer-events-none"
-/>
                 <div className="stats-grid">
                   <div className="stat-card">
                     <div className="stat-label">Solved</div>
@@ -596,7 +609,7 @@ export default function App() {
                           variant="secondary"
                           disabled={!unlocked}
                           onClick={() => unlocked && setSelectedMove(option)}
-                          className={`${selectedMove === option ? 'selected' : ''} ${!unlocked ? 'locked' : ''}`}
+                          className={`${selectedMove === option ? 'selected' : ''} ${!unlocked ? 'locked' : ''}`.trim()}
                         >
                           {option} {unlocked ? '✅' : '🔒'}
                         </AppButton>
@@ -620,9 +633,22 @@ export default function App() {
                   <div className="step-label">Step 3 — Observation</div>
                   <div className="step-title">What changes after the move?</div>
                   <div className="observation-panel">
-                    <div className="obs-line">{previewStep?.before || activeEquation || 'Equation'}</div>
-                    <div className="obs-arrow">↓ {previewStep?.action || 'Choose an unlocked move to preview the next step'}</div>
-                    <div className="obs-line">{previewStep?.after || 'Next balanced equation appears here'}</div>
+                    <div className="obs-line">{activeEquation || 'Equation'}</div>
+                    <div className="obs-arrow">↓ {previewStep?.action || 'Choose an unlocked move to work out the next step'}</div>
+                    <div className="obs-line">{stepCorrect ? (previewStep?.after || 'Next balanced equation appears here') : 'Type the next balanced equation below'}</div>
+                  </div>
+                  <div className="stack-gap small-gap">
+                    <strong>Type the new equation</strong>
+                    <input
+                      value={nextEquationInput}
+                      onChange={(e) => {
+                        setNextEquationInput(e.target.value);
+                        setStepChecked(false);
+                        setStepCorrect(false);
+                      }}
+                      placeholder="e.g. 3x = 15"
+                      className="text-input"
+                    />
                   </div>
                   <div>
                     <strong>Is the equation still balanced?</strong>
@@ -632,9 +658,26 @@ export default function App() {
                     </div>
                   </div>
                   <div className="yesno-row">
-                    <AppButton onClick={applyMove} disabled={!previewStep || appliesToBothSides !== true || balancedAnswer !== true}>Apply move</AppButton>
+                    <AppButton variant="secondary" onClick={checkStep} disabled={!previewStep || appliesToBothSides !== true}>Check step</AppButton>
+                    <AppButton onClick={applyMove} disabled={!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect}>Apply move</AppButton>
                     <AppButton variant="secondary" onClick={() => setShowEscapePlan((s) => !s)}>{showEscapePlan ? 'Hide escape plan' : 'Show escape plan'}</AppButton>
                   </div>
+                  {stepChecked && (
+                    <div className={`feedback-box ${stepCorrect ? 'feedback-success' : 'feedback-error'}`}>
+                      {stepCorrect ? (
+                        <div>
+                          <strong>Correct next step.</strong>
+                          <div>Your new equation stays balanced.</div>
+                        </div>
+                      ) : (
+                        <div>
+                          <strong>Not quite yet.</strong>
+                          <div>Try the next equation again before applying the move.</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {appliesToBothSides === false && <span className="warning">You need to apply the move to both sides first.</span>}
                 </div>
 
                 {missionComplete && (
@@ -710,3 +753,8 @@ export default function App() {
     </div>
   );
 }
+
+               
+
+               
+
