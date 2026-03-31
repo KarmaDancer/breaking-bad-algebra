@@ -318,7 +318,11 @@ export default function App() {
   const progress = Math.round((solvedCount / totalProblems) * 100);
   const isCorrect = activeEquation && solution !== null && guess !== '' && Number(guess) === solution;
   const missionComplete = parsed?.type === 'linear' && parsed.coeff === 1 && parsed.constant === 0;
-
+useEffect(() => {
+  if (missionComplete) {
+    setWalterMessage('Good. X has broken free.');
+  }
+}, [missionComplete]);
   useEffect(() => {
     if (roundNumber > 1 && engineTopRef.current) {
       engineTopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
