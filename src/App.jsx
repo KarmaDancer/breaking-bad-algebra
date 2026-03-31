@@ -371,18 +371,19 @@ export default function App() {
   }
 
   function applyMove() {
-    if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect) return;
-    setHistory((prev) => [...prev, previewStep]);
-    setLiveEquation(previewStep.after);
-    setSelectedTrap('');
-    setSelectedMove('');
-    setAppliesToBothSides(null);
-    setBalancedAnswer(null);
-    setSubmitted(false);
-    setNextEquationInput('');
-    setStepChecked(false);
-    setStepCorrect(false);
-  }
+  if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect) return;
+  setHistory((prev) => [...prev, previewStep]);
+  setLiveEquation(previewStep.after);
+  setSelectedTrap('');
+  setSelectedMove('');
+  setAppliesToBothSides(null);
+  setBalancedAnswer(null);
+  setSubmitted(false);
+  setNextEquationInput('');
+  setStepChecked(false);
+  setStepCorrect(false);
+  setRoundNumber((n) => n + 1);
+}
 
   function handleNextMission() {
     if (mode === 'homework') {
