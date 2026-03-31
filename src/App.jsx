@@ -526,7 +526,7 @@ export default function App() {
               <h2 className="card-title">Start a mission</h2>
               <p className="card-copy">Practice with built-in levels or bring in a homework equation.</p>
               <div className="stack-gap">
-                <AppButton onClick={startLevelMode}><Swords size={16} /> Start level mode</AppButton>
+                <AppButton onClick={startLevelMode}><Swords size={16} /> Practice missions</AppButton>
                 <div className="mini-card">
                   <strong>Homework mode</strong>
                   <input
@@ -535,9 +535,8 @@ export default function App() {
                     placeholder="Type an equation, e.g. 3x + 5 = 20"
                     className="text-input"
                   />
-                  <AppButton variant="secondary" onClick={startHomeworkMode}><Home size={16} /> Use my homework equation</AppButton>
-                  <span className="muted">Starter version supports simple linear and bracket equations.</span>
                 </div>
+                <AppButton variant="secondary" onClick={startHomeworkMode}><Home size={16} /> Use my own homework equation</AppButton>
               </div>
             </Card>
           </motion.div>
