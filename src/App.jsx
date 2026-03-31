@@ -462,32 +462,33 @@ export default function App() {
                 <strong>Walter says:</strong>
                 <div>{walterMessage}</div>
               </div>
-              <div className="hero-grid">
-                <div className="relative pr-24 md:pr-32">
+              <div className="hero-grid" style={{ alignItems: 'start' }}>
+                <div>
                   <h1 className="hero-title">Breaking Bad Algebra</h1>
-
+                  <div className="stats-grid" style={{ marginTop: '12px' }}>
+                    <div className="stat-card">
+                      <div className="stat-label">Solved</div>
+                      <div className="stat-value">{solvedCount}</div>
+                    </div>
+                    <div className="stat-card">
+                      <div className="stat-label">Score</div>
+                      <div className="stat-value">{score}</div>
+                    </div>
+                    <div className="stat-card span-two">
+                      <div className="stat-row">
+                        <span>Mission progress</span>
+                        <span>{progress}%</span>
+                      </div>
+                      <ProgressBar value={progress} />
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <img
                     src="/walter-white-homework.jpg"
                     alt="Walter White asking about homework"
-                    className="absolute top-0 right-[-20px] md:right-[-40px] w-24 md:w-32 opacity-90 pointer-events-none"
+                    className="w-24 md:w-32 opacity-90 pointer-events-none"
                   />
-                </div>
-                <div className="stats-grid">
-                  <div className="stat-card">
-                    <div className="stat-label">Solved</div>
-                    <div className="stat-value">{solvedCount}</div>
-                  </div>
-                  <div className="stat-card">
-                    <div className="stat-label">Score</div>
-                    <div className="stat-value">{score}</div>
-                  </div>
-                  <div className="stat-card span-two">
-                    <div className="stat-row">
-                      <span>Mission progress</span>
-                      <span>{progress}%</span>
-                    </div>
-                    <ProgressBar value={progress} />
-                  </div>
                 </div>
               </div>
             </div>
@@ -741,8 +742,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-  
