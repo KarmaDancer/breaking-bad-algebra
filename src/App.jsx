@@ -4,6 +4,7 @@ import { CheckCircle2, Home, Lock, RefreshCw, ShieldAlert, Swords, Target, WandS
 
 const trapOptions = ['Added', 'Subtracted', 'Multiplied', 'Divided', 'Inside brackets'];
 const allMoveOptions = [
+  'Square root both sides',
   'Add the same number to both sides',
   'Subtract the same number from both sides',
   'Multiply both sides',
@@ -74,7 +75,17 @@ function formatBracketExpression(outer, inner) {
 
 function parseEquation(equation) {
   const eq = cleanEquation(equation);
+// Power (x^2 = number)
+let match = eq.match(/^x\^2=(-?\d+)$/);
+if (match) {
+  return { type: 'power', rhs: Number(match[1]) };
+}
 
+// Surd (√x = number)
+match = eq.match(/^√x=(-?\d+)$/);
+if (match) {
+  return { type: 'surd', rhs: Number(match[1]) };
+}
   let match = eq.match(/^([+-]?\d*)x([+-]\d+)?=(-?\d+)$/);
   if (match) {
     const rawCoeff = match[1];
@@ -98,8 +109,23 @@ function parseEquation(equation) {
 
 function equationToString(parsed) {
   if (!parsed) return '';
-  if (parsed.type === 'linear') return `${formatLinearExpression(parsed.coeff, parsed.constant)} = ${parsed.rhs}`;
-  if (parsed.type === 'brackets') return `${formatBracketExpression(parsed.outer, parsed.inner)} = ${parsed.rhs}`;
+  
+if (parsed.type === 'power') return 'Squared';
+    return `x² = ${parsed.rhs}`;
+  }
+
+  if (parsed.type === 'surd') return 'Inside square root';
+    return `√x = ${parsed.rhs}`;
+  }
+
+  if (parsed.type === 'linear') {
+    return `${formatLinearExpression(parsed.coeff, parsed.constant)} = ${parsed.rhs}`;
+  }
+
+  if (parsed.type === 'brackets') {
+    return `${formatBracketExpression(parsed.outer, parsed.inner)} = ${parsed.rhs}`;
+  }
+
   return '';
 }
 
