@@ -462,17 +462,9 @@ export default function App() {
                 <strong>Walter says:</strong>
                 <div>{walterMessage}</div>
               </div>
-              <div className="badge-row">
-                <Badge>Breaking Bad Algebra</Badge>
-                <Badge outline>Break X out of the equation</Badge>
-              </div>
               <div className="hero-grid">
                 <div className="relative pr-24 md:pr-32">
                   <h1 className="hero-title">Breaking Bad Algebra</h1>
-                  <p className="hero-copy">
-                    X is your friend. X is trapped inside an equation. Your mission is to keep the equation balanced,
-                    choose the right move, and break X out step by step.
-                  </p>
 
                   <img
                     src="/walter-white-homework.jpg"
@@ -749,3 +741,8 @@ export default function App() {
     </div>
   );
 }
+
+
+
+
+  
