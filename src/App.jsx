@@ -639,6 +639,14 @@ export default function App() {
                     <div className="equation-text">{activeEquation || 'Type an equation to start'}</div>
                   </div>
                   {roundPrompt && <div className="muted">{roundPrompt}</div>}
+
+                  {parsed?.type === 'brackets' && (
+                    <div className="mini-card">
+                      💡 Two ways to handle brackets:
+                      <div>• Divide by the outside number (usually simpler)</div>
+                      <div>• Expand the brackets (also works)</div>
+                    </div>
+                  )}
                   <div>
                     <div className="step-label">Round {roundNumber} · Step 1</div>
                     <div className="step-title">Step 1. The equation must stay balanced. How is X trapped?</div>
