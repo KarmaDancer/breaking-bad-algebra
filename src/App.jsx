@@ -371,19 +371,19 @@ export default function App() {
   }
 
   function applyMove() {
-  if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect) return;
-  setHistory((prev) => [...prev, previewStep]);
-  setLiveEquation(previewStep.after);
-  setSelectedTrap('');
-  setSelectedMove('');
-  setAppliesToBothSides(null);
-  setBalancedAnswer(null);
-  setSubmitted(false);
-  setNextEquationInput('');
-  setStepChecked(false);
-  setStepCorrect(false);
-  setRoundNumber((n) => n + 1);
-}
+    if (!previewStep || appliesToBothSides !== true || balancedAnswer !== true || !stepCorrect) return;
+    setHistory((prev) => [...prev, previewStep]);
+    setLiveEquation(previewStep.after);
+    setSelectedTrap('');
+    setSelectedMove('');
+    setAppliesToBothSides(null);
+    setBalancedAnswer(null);
+    setSubmitted(false);
+    setNextEquationInput('');
+    setStepChecked(false);
+    setStepCorrect(false);
+    setRoundNumber((n) => n + 1);
+  }
 
   function handleNextMission() {
     if (mode === 'homework') {
@@ -443,21 +443,21 @@ export default function App() {
                 <Badge>Breaking Bad Algebra</Badge>
                 <Badge outline>Break X out of the equation</Badge>
               </div>
-             <div className="hero-grid">
-  <div className="relative pr-24 md:pr-32">
-    <h1 className="hero-title">Breaking Bad Algebra</h1>
-    <p className="hero-copy">
-      X is your friend. X is trapped inside an equation. Your mission is to keep the equation balanced,
-      choose the right move, and break X out step by step.
-    </p>
+              <div className="hero-grid">
+                <div className="relative pr-24 md:pr-32">
+                  <h1 className="hero-title">Breaking Bad Algebra</h1>
+                  <p className="hero-copy">
+                    X is your friend. X is trapped inside an equation. Your mission is to keep the equation balanced,
+                    choose the right move, and break X out step by step.
+                  </p>
 
-    <img
-      src="/walter-white-homework.jpg"
-      alt="Walter White asking about homework"
-      className="absolute top-0 right-0 w-24 md:w-32 opacity-90 pointer-events-none"
-    />
-  </div>
-  <div className="stats-grid">
+                  <img
+                    src="/walter-white-homework.jpg"
+                    alt="Walter White asking about homework"
+                    className="absolute top-0 right-[-20px] md:right-[-40px] w-24 md:w-32 opacity-90 pointer-events-none"
+                  />
+                </div>
+                <div className="stats-grid">
                   <div className="stat-card">
                     <div className="stat-label">Solved</div>
                     <div className="stat-value">{solvedCount}</div>
