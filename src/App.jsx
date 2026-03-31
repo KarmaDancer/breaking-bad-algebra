@@ -723,34 +723,9 @@ export default function App() {
                   </div>
                 )}
 
-                {!missionComplete && (
-                  <div className="answer-row">
-                    <input
-                      value={guess}
-                      onChange={(e) => setGuess(e.target.value)}
-                      placeholder="Enter the value of x when X is free"
-                      className="text-input"
-                    />
-                    <AppButton onClick={handleSubmit}>Check mission</AppButton>
-                  </div>
-                )}
+                
 
-                {!missionComplete && submitted && (
-                  <div className={`feedback-box ${isCorrect ? 'feedback-success' : 'feedback-error'}`}>
-                    {isCorrect ? (
-                      <div className="feedback-row">
-                        <CheckCircle2 className="feedback-icon" />
-                        <div>
-                          <strong>Correct.</strong>
-                          <div>You broke X out of the equation.</div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <strong>Not quite yet.</strong>
-                        <div>Keep following the unlocked moves until X is isolated.</div>
-                      </div>
-                    )}
+                
                   </div>
                 )}
 
@@ -780,3 +755,6 @@ export default function App() {
     </div>
   );
 }
+
+       
+      
