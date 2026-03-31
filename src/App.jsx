@@ -443,15 +443,21 @@ export default function App() {
                 <Badge>Breaking Bad Algebra</Badge>
                 <Badge outline>Break X out of the equation</Badge>
               </div>
-              <div className="hero-grid">
-                <div>
-                  <h1 className="hero-title">Breaking Bad Algebra</h1>
-                  <p className="hero-copy">
-                    X is your friend. X is trapped inside an equation. Your mission is to keep the equation balanced,
-                    choose the right move, and break X out step by step.
-                  </p>
-                </div>
-                <div className="stats-grid">
+             <div className="hero-grid">
+  <div className="relative pr-24 md:pr-32">
+    <h1 className="hero-title">Breaking Bad Algebra</h1>
+    <p className="hero-copy">
+      X is your friend. X is trapped inside an equation. Your mission is to keep the equation balanced,
+      choose the right move, and break X out step by step.
+    </p>
+
+    <img
+      src="/walter-white-homework.jpg"
+      alt="Walter White asking about homework"
+      className="absolute top-0 right-0 w-24 md:w-32 opacity-90 pointer-events-none"
+    />
+  </div>
+  <div className="stats-grid">
                   <div className="stat-card">
                     <div className="stat-label">Solved</div>
                     <div className="stat-value">{solvedCount}</div>
