@@ -610,7 +610,7 @@ export default function App() {
                   </div>
                   {roundPrompt && <div className="muted">{roundPrompt}</div>}
                   <div>
-                    <div className="step-label">Round {roundNumber} · Step 1 — First Principle</div>
+                    <div className="step-label">Round {roundNumber} · Step 1</div>
                     <div className="step-title">Step 1. The equation must stay balanced. How is X trapped?</div>
                   </div>
                   <div className="option-grid">
@@ -662,11 +662,11 @@ export default function App() {
                   </div>
 
                 <div className="mini-card observation-box">
-                  <div className="step-label">Step 3 — Observation</div>
+                  <div className="step-label">Step 3</div>
                   <div className="step-title">Step 3. Apply your chosen move and type your new equation</div>
                   <div className="observation-panel">
                     <div className="obs-line">{activeEquation || 'Equation'}</div>
-                    <div className="obs-arrow">↓ {selectedMove ? (previewStep?.action || 'Work out the next balanced equation') : 'Choose the move for this round first'}</div>
+                    <div className="obs-arrow">↓ {selectedMove ? (previewStep?.action || 'Work out the next balanced equation') : ''}</div>
                     <div className="obs-line">{stepCorrect ? (previewStep?.after || '') : ''}</div>
                   </div>
                   <div className="stack-gap small-gap">
@@ -780,3 +780,9 @@ export default function App() {
     </div>
   );
 }
+
+                  
+                
+                 
+                       
+
