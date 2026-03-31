@@ -385,12 +385,11 @@ export default function App() {
     setStepChecked(false);
     setStepCorrect(false);
 
-    if (nextParsed?.type === 'linear' && nextParsed.coeff === 1 && nextParsed.constant === 0) {
-      setWalterMessage('Good. X has broken free.');
-      setRoundPrompt('');
-      setRoundNumber((n) => n + 1);
-      return;
-    }
+   if (nextParsed?.type === 'linear' && nextParsed.coeff === 1 && nextParsed.constant === 0) {
+  setWalterMessage('Good. X has broken free.');
+  setRoundPrompt('');
+  return;
+}
 
     setRoundNumber((n) => n + 1);
     setRoundPrompt('New equation. Start again: how is X trapped now, and what move makes sense here now?');
