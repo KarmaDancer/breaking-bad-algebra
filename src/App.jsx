@@ -301,6 +301,7 @@ export default function App() {
   const [stepChecked, setStepChecked] = useState(false);
   const [stepCorrect, setStepCorrect] = useState(false);
   const [roundNumber, setRoundNumber] = useState(1);
+  const [walterMessage, setWalterMessage] = useState("Let’s cook… algebra.");
 
   const level = levels[levelIndex];
   const presetEquation = useMemo(() => getProblem(levelIndex, problemIndex), [levelIndex, problemIndex]);
@@ -368,6 +369,12 @@ export default function App() {
     const correct = typed !== '' && typed === expected;
     setStepChecked(true);
     setStepCorrect(correct);
+
+    if (correct) {
+      setWalterMessage('Nice. That keeps the balance.');
+    } else {
+      setWalterMessage('Nope. That doesn’t balance the books.');
+    }
   }
 
   function applyMove() {
@@ -383,6 +390,8 @@ export default function App() {
     setStepChecked(false);
     setStepCorrect(false);
     setRoundNumber((n) => n + 1);
+
+    setWalterMessage('X is still trapped. What’s the next move?');
   }
 
   function handleNextMission() {
@@ -439,6 +448,10 @@ export default function App() {
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="hero-card">
             <div className="hero-header">
+              <div className="mini-card" style={{ marginBottom: '10px' }}>
+                <strong>Walter says:</strong>
+                <div>{walterMessage}</div>
+              </div>
               <div className="badge-row">
                 <Badge>Breaking Bad Algebra</Badge>
                 <Badge outline>Break X out of the equation</Badge>
@@ -699,6 +712,7 @@ export default function App() {
                 </div>
 
                 {missionComplete && (
+                  (() => { setWalterMessage('Good. X has broken free.'); return null; })(),
                   <div className="success-box">
                     <strong>Mission complete.</strong>
                     <span>X is free. The next set of moves is no moves at all — because X is already out.</span>
@@ -772,6 +786,7 @@ export default function App() {
   );
 }
 
+       
 
                
 
