@@ -607,6 +607,20 @@ export default function App() {
                       className="text-input"
                     />
                     <AppButton variant="secondary" onClick={() => loadEquation(customEquation.trim())}>Load equation</AppButton>
+
+                    <div className="mini-card" style={{ marginTop: '10px' }}>
+                      <strong>🧠 How to free x</strong>
+                      <div>• Undo what was done to x</div>
+                      <div>• Start with the outside</div>
+                      <div>• Keep both sides balanced</div>
+                      <div>• Repeat until x is alone</div>
+                    </div>
+                  </div>
+                )}
+                      placeholder="Type an equation"
+                      className="text-input"
+                    />
+                    <AppButton variant="secondary" onClick={() => loadEquation(customEquation.trim())}>Load equation</AppButton>
                   </div>
                 )}
 
@@ -787,3 +801,4 @@ export default function App() {
     </div>
   );
 }
+
