@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Home, Lock, RefreshCw, ShieldAlert, Swords, Target, WandSparkles } from 'lucide-react';
 
-const trapOptions = ['Added', 'Subtracted', 'Multiplied', 'Divided', 'Inside brackets', 'Squared'];
+const trapOptions = ['Added', 'Subtracted', 'Multiplied', 'Divided', 'Inside brackets'];
 const allMoveOptions = [
   'Add the same number to both sides',
   'Subtract the same number from both sides',
@@ -15,7 +15,6 @@ const allMoveOptions = [
   'Clear the fraction',
   'Apply exponent laws',
   'Simplify surds',
-  'Square root both sides',
   'Graph it',
 ];
 
@@ -39,11 +38,11 @@ const levels = [
     problems: ['2(x + 3) = 14', '3(x - 2) = 15', '5(x + 1) = 30', '4(x - 1) = 20'],
   },
   {
-  id: 4,
-  title: 'Level 4: Power Moves',
-  tagline: 'Exponents',
-  problems: ['x^2 = 25', 'x^2 = 49', 'x^2 = 64', 'x^2 = 81'],
-},
+    id: 4,
+    title: 'Level 4: Power Moves',
+    tagline: 'Exponents & surds',
+    problems: ['x^2 = 25', '√x = 6', 'x^2 = 49', '√x = 9'],
+  },
   {
     id: 5,
     title: 'Level 5: Factorise',
@@ -74,14 +73,9 @@ function formatBracketExpression(outer, inner) {
 }
 
 function parseEquation(equation) {
-  const eq = cleanEquation(equation).replace(/²/g, '^2');
+  const eq = cleanEquation(equation);
 
-  let match = eq.match(/^x\^2=(-?\d+)$/);
-  if (match) {
-    return { type: 'power', rhs: Number(match[1]) };
-  }
-
-  match = eq.match(/^([+-]?\d*)x([+-]\d+)?=(-?\d+)$/);
+  let match = eq.match(/^([+-]?\d*)x([+-]\d+)?=(-?\d+)$/);
   if (match) {
     const rawCoeff = match[1];
     const coeff = rawCoeff === '' || rawCoeff === '+' ? 1 : rawCoeff === '-' ? -1 : Number(rawCoeff);
@@ -105,8 +99,9 @@ function parseEquation(equation) {
 function equationToString(parsed) {
   if (!parsed) return '';
 
-  if (parsed.type === 'power') {
-    return `x² = ${parsed.rhs}`;
+  // Show ± when a square-root step produced two solutions
+  if (parsed.type === 'linear' && parsed.plusMinus) {
+    return `x = ±${parsed.rhs}`;
   }
 
   if (parsed.type === 'linear') {
@@ -122,7 +117,6 @@ function equationToString(parsed) {
 
 function detectTrap(parsed) {
   if (!parsed) return 'Unknown';
-  if (parsed.type === 'power') return 'Squared';
   if (parsed.type === 'brackets') return 'Inside brackets';
   if (parsed.constant > 0) return 'Added';
   if (parsed.constant < 0) return 'Subtracted';
@@ -132,10 +126,6 @@ function detectTrap(parsed) {
 
 function getAvailableMoves(parsed) {
   if (!parsed) return [];
-
-  if (parsed.type === 'power') {
-    return ['Square root both sides'];
-  }
 
   if (parsed.type === 'brackets') {
     const moves = [];
@@ -161,6 +151,7 @@ function getAvailableMoves(parsed) {
 function buildPreviewStep(parsed, move) {
   if (!parsed || !move) return null;
 
+  // 🔥 POWER CASE (x^2 = number)
   if (parsed.type === 'power') {
     const before = equationToString(parsed);
 
@@ -171,16 +162,21 @@ function buildPreviewStep(parsed, move) {
         coeff: 1,
         constant: 0,
         rhs: value,
+        plusMinus: true, // 👈 flag for ± display
       };
 
       return {
         before,
-        action: 'square root both sides',
+        action: 'square root both sides (remember ±)',
         after: equationToString(afterParsed),
+        explanation: 'Both + and − work because squaring removes the sign: 5² = 25 and (−5)² = 25.',
         nextParsed: afterParsed,
       };
     }
   }
+
+  // ⬇️ existing logic continues
+  if (!parsed || !move) return null;
 
   if (parsed.type === 'linear') {
     const before = equationToString(parsed);
@@ -720,6 +716,12 @@ export default function App() {
                     <AppButton variant="secondary" onClick={checkStepAndAdvance} disabled={!selectedMove || !previewStep}>Check move</AppButton>
                     
                   </div>
+                  {previewStep?.explanation && (
+                  <div className="mini-card">
+                    💡 {previewStep.explanation}
+                  </div>
+                )}
+
                   {stepChecked && (
                     <div className={`feedback-box ${stepCorrect ? 'feedback-success' : 'feedback-error'}`}>
                       {stepCorrect ? (
